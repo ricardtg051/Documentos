@@ -28,11 +28,20 @@ def generar_documento_word(datos_inputs, datos_combos, observaciones, responsabl
     """Recibe diccionarios con la información de la UI y genera el Word."""
     doc = DocxTemplate("plantilla.docx")
     
-    # Combinar los diccionarios para el contexto
-    ctx = {**datos_inputs, **datos_combos}
+    # Combinar los diccionarios para el contexto sin usar metodos avanzados
+    ctx = {}
+    for clave, valor in datos_inputs.items():
+        ctx[clave] = valor
+    for clave, valor in datos_combos.items():
+        ctx[clave] = valor
+        
     ctx["observaciones"] = observaciones
     ctx["fecha_actual"] = datetime.now().strftime("%d/%m/%Y")
-    ctx["responsable_centro"] = responsable if responsable else "No Asignado"
+    
+    if responsable:
+        ctx["responsable_centro"] = responsable
+    else:
+        ctx["responsable_centro"] = "No Asignado"
     
     doc.render(ctx)
     cedula = datos_inputs.get("cedula", "Desconocido")

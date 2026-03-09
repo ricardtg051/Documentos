@@ -49,16 +49,26 @@ class AppFinalPro(ctk.CTk):
     # --- Validaciones y UI General ---
     def validar_letras(self, texto_nuevo):
         # Ayudamos al sistema a no bloquear las propias instrucciones grises
-        if texto_nuevo == "" or texto_nuevo == "Ej: Leonardo David Moreno Bruce": return True
-        return all(char.isalpha() or char.isspace() for char in texto_nuevo)
+        if texto_nuevo == "" or texto_nuevo == "Ej: Leonardo David Moreno Bruce": 
+            return True
+            
+        for letra in texto_nuevo:
+            if not (letra.isalpha() or letra.isspace()):
+                return False
+        return True
 
     def validar_numeros(self, texto_nuevo):
         if texto_nuevo == "" or texto_nuevo == "Solo números" or texto_nuevo == "04120000000": return True
         return texto_nuevo.isdigit()
 
     def validar_fecha(self, texto_nuevo):
-        if texto_nuevo == "" or texto_nuevo == "DD/MM/AAAA": return True
-        return all(char.isdigit() or char in "/-" for char in texto_nuevo)
+        if texto_nuevo == "" or texto_nuevo == "DD/MM/AAAA": 
+            return True
+            
+        for caracter in texto_nuevo:
+            if not (caracter.isdigit() or caracter == "/" or caracter == "-"):
+                return False
+        return True
 
     def auto_formatear_fecha(self, event, widget_entry):
         if event.keysym in ("BackSpace", "Delete", "Left", "Right"): return
@@ -209,8 +219,15 @@ class AppFinalPro(ctk.CTk):
             ))
 
     def guardar_ui(self):
-        d = {k: v.get().strip() for k, v in self.inputs.items()}
-        c = {k: v.get() for k, v in self.combos.items()}
+        # Crear diccionarios paso a paso en lugar de usar comandos avanzados
+        d = {}
+        for clave, valor in self.inputs.items():
+            d[clave] = valor.get().strip()
+            
+        c = {}
+        for clave, valor in self.combos.items():
+            c[clave] = valor.get()
+            
         obs = self.txt_obs.get("1.0", "end-1c").strip()
         
         # --- VALIDACIONES NUEVAS (No dejar vacio ni fechas malas) ---
@@ -280,8 +297,14 @@ class AppFinalPro(ctk.CTk):
                 messagebox.showwarning("Atención", "Debe ingresar una cédula para generar el documento.")
                 return
 
-            datos_pantalla = {k: v.get().strip() for k, v in self.inputs.items()}
-            combos_pantalla = {k: v.get() for k, v in self.combos.items()}
+            datos_pantalla = {}
+            for clave, valor in self.inputs.items():
+                datos_pantalla[clave] = valor.get().strip()
+                
+            combos_pantalla = {}
+            for clave, valor in self.combos.items():
+                combos_pantalla[clave] = valor.get()
+                
             obs_pantalla = self.txt_obs.get("1.0", "end-1c").strip()
 
             u = db.obtener_usuario(ced)

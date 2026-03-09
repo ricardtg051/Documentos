@@ -1,10 +1,10 @@
 # Sistema de Registro Médico ("AppFinalPro")
 
-Este es el repositorio del Sistema de Registro Médico, una herramienta sencilla que hice en Python para registrar, buscar y exportar datos del personal de salud. Usa `customtkinter` para la interfaz gráfica y SQLite para guardar la información.
+Este proyecto es la entrega final de programación en Python. Es una aplicación orientada a registrar, buscar y exportar datos del personal médico y áreas de guardia. Para la interfaz gráfica utilizamos la librería `customtkinter` y para el almacenamiento de datos usamos una base de datos local `SQLite`.
 
-## ⚙️ ¿Qué necesitas para correrlo?
+## ⚙️ ¿Qué necesitas para ejecutarlo?
 
-Asegúrate de tener Python 3 instalado. Luego, instala las librerías que usé en el proyecto ejecutando esto en tu terminal:
+Asegúrate de tener Python (versión 3.x) instalado en tu computadora. Luego, debes instalar los paquetes adicionales que usa el código. Abre tu terminal o línea de comandos y ejecuta:
 
 ```bash
 pip install customtkinter pandas docxtpl openpyxl Pillow
@@ -12,79 +12,75 @@ pip install customtkinter pandas docxtpl openpyxl Pillow
 
 ## Estructura del Proyecto
 
-El proyecto está organizado en la siguiente estructura de carpetas:
+Organizamos el proyecto en varias carpetas para estructurarlo mejor:
 
-*   `codigo/`: Contiene todo el código fuente de la aplicación en Python.
-    *   `principal.py`: Archivo principal para iniciar la aplicación. Maneja el flujo general.
-    *   `basededatos.py`: Gestión e interacción con SQLite y creación de backups.
-    *   `documentos.py`: Generación de reportes (Word y Excel).
-    *   `ui_login.py`: Lógica e interfaz gráfica de la pantalla de inicio y carga.
-    *   `ui_menu.py`: Elementos y navegación del menú principal del sistema.
-    *   `ui_formulario.py`: Diseño y componentes visuales del formulario de registros.
-*   `bases_de_datos/`: Almacena el repositorio local.
-    *   `database_final.db`: La base de datos oficial.
-*   `imagenes/`: Recursos visuales utilizados en la interfaz (fondos jpg).
-*   `plantilla.docx`: Plantilla base requerida para la generación del Carnet / Constancia en Word.
+*   `codigo/`: Contiene los módulos de Python.
+    *   `principal.py`: Es el archivo principal. Ejecútalo para abrir el programa.
+    *   `basededatos.py`: Se encarga de conectarse a la base de datos para consultar o guardar la información.
+    *   `documentos.py`: Es el encargado de generar y exportar los reportes en Word y Excel.
+    *   `ui_login.py`: Interfaz de la pantalla de inicio de sesión.
+    *   `ui_menu.py`: Interfaz de botones del menú principal.
+    *   `ui_formulario.py`: Interfaz del formulario de registros y búsquedas.
+*   `bases_de_datos/`: Carpeta donde se almacena la información relacional de la aplicación.
+    *   `database_final.db`: Este es el archivo real de la base de datos.
+*   `imagenes/`: Los fondos de la interfaz (`fondo_app.jpg`, etc).
+*   `plantilla.docx`: Un documento base de Word que el programa utiliza para generar automáticamente los expedientes.
 *   `Leeme.md`: Este manual de usuario.
 
 ## 🚀 ¿Cómo se usa?
 
-1. Fíjate que en la misma carpeta del proyecto tengas todos los archivos juntos en sus debidas carpetas (`codigo`, `bases_de_datos`, etc).
-   - Los scripts `principal.py`, `basededatos.py` y `documentos.py` (dentro de `codigo`).
-   - La base de datos `database_final.db` (dentro de `bases_de_datos`).
-   - El archivo `plantilla.docx` (se usa para generar los expedientes).
-   - Las imágenes de fondo (`fondo_app.jpg`, `fondo_carga.jpg`, `fondo_login.jpg` dentro de `imagenes`).
-2. Abre tu terminal ahí, y arranca el programa con:
+1. Verifica que en tu carpeta del proyecto tengas todo esto guardado manteniendo la estructura original.
+2. Abre tu terminal de comandos e ingresa:
    ```bash
    python codigo/principal.py
    ```
-3. Cuando te pida usuario y contraseña, ingresa con **admin** en ambos (usuario: `admin`, clave: `admin`).
+3. Las credenciales de acceso por defecto asignadas al Administrador son: usuario **admin**, clave **admin**.
 
 ---
 
-## 📖 Manual Rápido (Cómo hacer las cosas básicas)
+## 📖 Manual Práctico
 
-### 📝 1. Agregar a alguien nuevo
-- Entra a **"📝 Nuevo Registro"** en el menú principal.
-- Llena los datos que te piden (Cédula, correo, universidad, etc.). Ojo con los correos y las cédulas, el sistema valida que estén bien escritos y que la cédula no se repita.
-- Dale al botón verde **"💾 GUARDAR"** abajo y listo.
+### 📝 1. Agregar a un residente nuevo
+- Entra a **"📝 Nuevo Registro"**.
+- Rellena todos los campos. Al escribir la fecha o la cédula el sistema valida automáticamente para evitar que ingreses letras donde van números.
+- Presiona **"💾 GUARDAR"** y el sistema confirmará la creación del registro.
 
-### 🔍 2. Buscar, Editar (o Eliminar)
-- En el menú, elige **"🔍 Buscar y Gestionar"**.
-- Arriba hay una barra de búsqueda: pon la cédula o el nombre y te saldrán los resultados dinámicamente. Dale clic al que necesitas.
-- Vas a ver que todos sus datos se cargan solitos en el formulario. Cámbiales lo que necesites y dale a **"💾 ACTUALIZAR CAMBIOS"**.
-- Si entraste como administrador (con la cuenta `admin`), vas a ver un botón rojo que dice **"ELIMINAR"** por si te equivocaste y quieres borrar ese registro.
+### 🔍 2. Editar, Buscar o Borrar registros
+- En el menú principal, ve a la opción **"🔍 Buscar y Gestionar"**.
+- Arriba a la derecha hay una barra de búsqueda: escribe un nombre o cédula y abajo te aparecerán coincidencias. Selecciona a la persona que buscas.
+- El formulario en pantalla se llenará automáticamente con sus datos actuales.
+- Modifica los campos que necesites y presiona **"💾 ACTUALIZAR CAMBIOS"**.
+- Si iniciaste sesión como Administrador, tendrás un botón rojo extra que dice **"ELIMINAR"** por si deseas borrar permanentemente a ese usuario del sistema.
 
-### 📄 3. Sacar un Reporte en Word
-Si necesitas imprimirle el expediente a alguien:
-- Búscalo en el sistema para que sus datos aparezcan en pantalla.
-- Dale al botón naranja **"📄 WORD"**.
-- El sistema automáticamente va a agarrar el archivo `plantilla.docx`, va a rellenar sus datos, te va a crear un archivo nuevo como `Expediente_1234567.docx`, y lo va a abrir.
+### 📄 3. Sacar un documento Word
+Para generar e imprimir el expediente consolidado:
+- Busca a la persona en el sistema (Paso 2) para que todos sus datos particulares carguen en pantalla.
+- Selecciona el botón naranja **"📄 WORD"**.
+- El sistema procesará la información, abrirá nuestra `plantilla.docx`, la rellenará y generará un documento nuevo (ej: `Expediente_1234567.docx`) listo para la impresión.
 
-### 📂 4. Exportar toodos los datos del sistema
-Si necesitas pasarle el reporte a logística o algo, ve al menú principal y dale a **"📂 Exportar a Excel"**. Se va a crear un archivo que se llama `Base_Datos.xlsx` con todo lo que hay guardado en la base de datos hasta ese momento.
+### 📂 4. Exportar resúmenes a Excel
+Para generar un reporte general con toda la nómina, ve a la pantalla inicial del sistema y haz clic en **"📂 Exportar a Excel"**. El programa creará un documento general de registros y lo guardará en la carpeta `bases_de_datos` con el nombre `Reporte_General_Residentes.xlsx`.
 
-### 💾 5. Hacer Respaldo (Backup) y Restaurarlo
-Si tienes el rol de "Administrador", verás un botón morado que dice **"💾 Crear Respaldo (Backup)"**. Úsalo cada cierto tiempo para guardar una copia exacta y segura de toda la base de datos en tu pendrive o disco duro. Solo dale clic y elige dónde quieres guardarlo (se guarda con un nombre y fecha automáticos).
-* **¿Cómo restaurarlo o usarlo en otra PC?** Muy fácil. Tomas el archivo `.db` que acabas de guardar en tu pendrive y lo llevas a la otra computadora.
-  **Importante:** Debes renombrar ese archivo de respaldo exactamente a **`database_final.db`**.
-  Luego, simplemente reemplazas (pegas y sobrescribes) ese archivo en la carpeta `bases_de_datos` del nuevo proyecto. Cuando abras el programa de nuevo, ¡listo! ya tendrás ahí todos los datos.
+### 💾 5. Respaldo (Backup) de la Base de Datos
+Para el control de registros es clave respaldar la información. Con el rol de Administrador tendrás visible el botón: **"💾 Crear Respaldo (Backup)"**. Úsalo para guardar una copia íntegra de toda la base de datos en una ubicación externa elegida (ej. Flash Drive USB).
+* **Restauración de base de datos:**
+  En caso de migración o formateo del equipo de uso, pega el archivo de repaldo que posees desde de tu unidad física a la carpeta `bases_de_datos` de la instalación nueva del software, y **modifica el nombre del archivo a `database_final.db`** (reemplazando cualquier archivo idéntico que estuviese allí previamente o borrándolo). Al abrir el programa nuevamente, la información se cargará con total normalidad.
 
-### 💡 Unos atajos extra
-- Si estabas viendo los datos de alguien y quieres vaciar la pantalla para agregar a alguien más de cero, dale al botón gris **"🧹 LIMPIAR TODO"**.
-- Si se te olvida algo de esto, dentro del formulario hay un botón amarillo de **"❓ AYUDA"**. Dale ahí y te sale un resumen rápido.
+### 💡 Atajos
+- El botón **"🧹 LIMPIAR TODO"** limpia los campos para empezar el ingreso de un registro desde cero.
+- Ante dudas con el flujo de información, presiona el botón amarillo **"❓ AYUDA"** dentro del formulario.
 
 ---
 
 ## 🛠️ Plan de Mantenimiento del Sistema
 
-Para garantizar el funcionamiento óptimo del "Sistema de Registro Médico" a largo plazo, se recomienda seguir el siguiente plan de mantenimiento de forma periódica:
+Para garantizar que este proyecto se mantenga sustentable y funcional a largo plazo, debe aplicarse este plan logístico:
 
-1. **Mantenimiento Preventivo (Semanal):**
-   *   **Creación de Backups:** Utilizar la función de "Crear Respaldo (Backup)" desde una cuenta de Administrador al menos una vez por semana o tras registrar un volumen significativo de nuevos datos.
-   *   **Almacenamiento Seguro:** Guardar estas copias de resguardo (`.db`) en un dispositivo externo (pendrive, disco duro extraíble) o en un servicio de almacenamiento en la nube (Google Drive, OneDrive) y no en la misma computadora donde opera el sistema.
+1. **Mantenimiento Preventivo (Rutina Semanal):**
+   *   **Creación de Backups (Respaldos):** Una o dos veces a la semana, ejecutar la herramienta de Respaldo en la aplicación y descargar la base de datos a una unidad extraíble portátil. Esto prevendrá pérdidas masivas de información en escenarios de daño al hardware base.
+   *   **Almacenamiento Virtual:** Ademas del resguardo físico, se sugiere agendar rutinas para subir los respaldos clave a servicios nube, como Google Drive / OneDrive.
 
-2. **Mantenimiento Correctivo (Mensual / bimensual):**
-   *   **Revisión de Integridad:** Verificar que los reportes generados en Word (Expedientes) y Excel (Base de datos completa) se abren y leen correctamente, confirmando que la plantilla `plantilla.docx` no haya sido alterada.
-   *   **Limpieza de Directorio:** Procurar que dentro de la carpeta `bases_de_datos` solo se encuentren el archivo principal `database_final.db` y los últimos backups necesarios.
-   *   **Actualización de Dependencias:** Revisar periódicamente si las librerías base (ej. *customtkinter*, *pandas*) cuentan con actualizaciones de seguridad. Se pueden actualizar mediante `pip install --upgrade [nombre_librería]`.
+2. **Mantenimiento Correctivo (Rutina Mensual/Semestral):**
+   *   **Auditoría de Documentos:** Corroborar cada ciertas semanas que las exportaciones en formato Microsoft (.xlsx y .docx) mantengan total integridad de lectura y ejecución. Verificar frecuentemente que la `plantilla.docx` base no haya sufrido alteraciones gráficas causadas directamente por administradores en Windows.
+   *   **Limpieza de Directorios:** Examinar la carpeta operativa `bases_de_datos`. Descartar .db residuales conservando únicamente el archivo de lectura actual (`database_final.db`) y uno o dos backups adyacentes a la fecha para no comprometer el procesamiento del ordenador base.
+   *   **Actualización de Librerías:** Una vez durante el semestre, es prudente validar mediante la terminal del entorno de ejecución `pip install --upgrade customtkinter pandas docxtpl openpyxl` para importar optimizaciones inherentes a las librerías base del software.

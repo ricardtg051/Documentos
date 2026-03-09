@@ -9,8 +9,12 @@ def ejecutar_consulta(query, parametros=(), fetch=False, fetchall=False):
     try:
         cursor = conn.execute(query, parametros)
         if fetch:
-            resultado = cursor.fetchall() if fetchall else cursor.fetchone()
+            if fetchall:
+                resultado = cursor.fetchall()
+            else:
+                resultado = cursor.fetchone()
             return resultado
+        
         conn.commit()
     finally:
         conn.close()
@@ -52,7 +56,10 @@ def validar_login(user, pwd):
 
 def obtener_mensaje_ayuda():
     res = ejecutar_consulta("SELECT valor FROM configuracion WHERE clave = 'mensaje_ayuda'", fetch=True)
-    return res[0] if res else "Escriba aquí la ayuda..."
+    if res:
+        return res[0]
+    else:
+        return "Escriba aquí la ayuda..."
 
 def buscar_usuarios_dinamico(texto):
     return ejecutar_consulta("SELECT cedula, nombre FROM usuarios WHERE cedula LIKE ? OR nombre LIKE ? LIMIT 5", 
@@ -64,11 +71,17 @@ def obtener_usuario(parametro):
 
 def verificar_cedula(cedula):
     res = ejecutar_consulta("SELECT nombre FROM usuarios WHERE cedula = ?", (cedula,), fetch=True)
-    return res[0] if res else None
+    if res:
+        return res[0]
+    else:
+        return None
 
 def obtener_responsable_centro(centro):
     res = ejecutar_consulta("SELECT responsable FROM centros WHERE nombre = ?", (centro,), fetch=True)
-    return res[0] if res else None
+    if res:
+        return res[0]
+    else:
+        return None
 
 def obtener_opciones(tabla, columna="nombre", filtro_col=None, filtro_val=None):
     if filtro_col and filtro_val:
@@ -77,7 +90,14 @@ def obtener_opciones(tabla, columna="nombre", filtro_col=None, filtro_val=None):
     else:
         query = f"SELECT {columna} FROM {tabla}"
         res = ejecutar_consulta(query, fetch=True, fetchall=True)
-    return [x[0] for x in res] if res else []
+        
+    if res:
+        lista_opciones = []
+        for fila in res:
+            lista_opciones.append(fila[0])
+        return lista_opciones
+    else:
+        return []
 
 def guardar_nuevo_usuario(d, c, obs):
     ejecutar_consulta("""INSERT INTO usuarios 

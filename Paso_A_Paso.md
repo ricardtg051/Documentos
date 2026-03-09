@@ -1,36 +1,33 @@
-# 🛠️ Chuleta: ¡Cómo salvamos este proyecto (Paso a Paso)!
+# Resumen de Correcciones y Refactorización (Paso a Paso)
 
-¡Hola chicos! 👋 Si están leyendo esto, probablemente vieron que el proyecto pasó de ser un solo archivo gigante y desorganizado a algo mucho más profesional y estructurado. Aquí les dejo la "chuleta" o el resumen rápido de todos los cambios que se le hicieron para que pasara la evaluación, fase por fase.
-
----
-
-## 🛑 Fase 1: Validaciones y Alertas (Que no explote)
-El programa antes dejaba guardar cosas vacías y las fechas eran un desastre.
-1.  **Alertas de Campos Vacíos:** Se fue al código y se le puso un "freno". Si se le da a `Guardar` y falta la cédula o el nombre, ahora salta una ventanita de error que advierte "¡Epa, llena todos los campos!".
-2.  **Fechas Inteligentes:** En lugar de dejar que alguien escriba "hola" en una fecha de nacimiento, se le puso una validación. Ahora solo acepta números y se pone automáticamente la barrita diagonal `/` a medida que se escribe (ej: `05/10/2000`).
-3.  **Confirmaciones:** Ahora el programa habla. Si se guardó algo, dice "Registro guardado". Si se va a eliminar a alguien, pregunta "¿Estás seguro?". ¡Súper necesario para el usuario!
-
-## 💾 Fase 2: La Base de Datos (Seguridad y Respaldo)
-La base de datos de SQLite estaba muy frágil.
-1.  **Claves Primarias (IDs):** Se le agregó el atributo `id INTEGER PRIMARY KEY AUTOINCREMENT` a la tabla `usuarios`. Ahora, aunque dos personas se llamen igual o compartan otra cosa, tienen un código interno único y la base de datos no se confunde. *(¡Normalización salvada!)*
-2.  **El Botón Mágico (Backups):** Se creó una función que literalmente copia el archivito de la base de datos (`.db`) y lo pega donde el usuario indique. Así, el administrador puede bajar respaldos a un pendrive con un solo clic.
-
-## 🏗️ Fase 3: Rompiendo la Tubería (Refactorización)
-*¡Esta fue la más pesada!* Toda la arquitectura del código (la base de datos, los botones, la lógica) estaba metida en un solo archivo gigante (`main.py`) que se leía de arriba a abajo.
-1.  **Limpieza General:**
-    - Se renombró `main.py` a `principal.py` y `database.py` a `basededatos.py` (¡todo en español, como tiene que ser!).
-    - Se crearon 3 carpetas para ordenar el sistema: `codigo`, `bases_de_datos` e `imagenes`.
-2.  **Orientación a Objetos (El Desacople):**
-    - Se extrajeron cientos de líneas de la interfaz gráfica y se dividieron en pedazos más pequeños usando clases de Python.
-    - Se creó `ui_login.py` (para la pantalla de inicio).
-    - Se creó `ui_menu.py` (para la barra lateral).
-    - Se creó `ui_formulario.py` (para los botones y los cuadros de texto).
-    - Ahora, `principal.py` quedó optimizado y solo importa y une a estas piezas externas.
-
-## 📓 Fase 4: Documentación y Detalles Finales
-1.  **Detalles Estéticos:** Se arregló que se pueda iniciar sesión simplemente presionando la tecla `Enter`, y se pulió la ortografía de los botones y alertas.
-2.  **El Exportador:** El reporte de Excel ahora también se genera automáticamente en la carpeta de `bases_de_datos` bajo el nombre `Reporte_General_Residentes.xlsx`.
-3.  **Los Manuales:** Se reescribió el archivo `Leeme.md` que les explica cómo usar la app (¡Léanlo!), y se añadió el **Plan de Mantenimiento** para asegurar que el sistema puede durar años funcionando sin romperse.
+Este documento detalla los cambios realizados al proyecto original para mejorar su estructura, seguridad y experiencia de usuario. Se divide en cuatro fases principales:
 
 ---
-**¡Y eso es todo!** El código pasó de ser nivel 1 a un proyecto real nivel profesional. Éxitos con esto. 🚀
+
+## Fase 1: Validaciones y Control de Errores
+El programa original permitía guardar registros en blanco y presentaba problemas con el formato de las fechas.
+1.  **Bloqueo de campos vacíos:** Se añadió validación en el código. Si un usuario intenta guardar un registro sin llenar los campos requeridos (ej. cédula o nombre), el sistema ahora muestra una alerta solicitando que se completen.
+2.  **Auto-formato de Fechas:** Se programó una validación para los campos de fecha. Ahora solo permiten el ingreso de números y agregan automáticamente el separador `/` mientras se teclea (ej: `05/10/2000`), evitando errores de formato.
+3.  **Ventanas de Confirmación:** Se agregaron alertas emergentes de confirmación para acciones importantes, como avisar cuando un registro se guarda correctamente o prevenir que se elimine a un usuario por accidente ("¿Está seguro de eliminar este registro?").
+
+## Fase 2: Control de la Base de Datos
+La base de datos original en SQLite requería mejoras de normalización y seguridad.
+1.  **Claves Primarias (IDs):** Se le asignó el atributo `id INTEGER PRIMARY KEY AUTOINCREMENT` a la tabla `usuarios`. Esto garantiza que cada registro tenga un identificador interno único, incluso si dos personas comparten el mismo nombre o poseen datos similares.
+2.  **Creación de Backups:** Se implementó una función desde el menú de Administrador que permite copiar el archivo principal de la base de datos (`.db`) a una ruta elegida por el usuario. Esto facilita tener respaldos actualizados de manera local o en unidades extraíbles.
+
+## Fase 3: Refactorización y Modularidad
+El código inicial estaba concentrado en un solo archivo (`main.py`), lo que dificultaba su lectura y mantenimiento.
+1.  **Limpieza de Directorios:**
+    - Se modificaron los nombres de los archivos al español (`principal.py`, `basededatos.py`).
+    - Se crearon las carpetas `codigo`, `bases_de_datos` e `imagenes` para organizar lógicamente los recursos del proyecto.
+2.  **Orientación a Objetos:**
+    - Se extrajo el código de las diferentes pantallas (interfaces gráficas) y se separó en módulos utilizando clases de Python.
+    - `ui_login.py` (Maneja el inicio de sesión).
+    - `ui_menu.py` (Maneja la vista de botones del menú principal).
+    - `ui_formulario.py` (Maneja el renderizado de campos de texto y listas desplegables).
+    - Ahora, `principal.py` funciona como un controlador principal mucho más limpio que se encarga de importar y enlazar estas clases.
+
+## Fase 4: Ajustes Finales y Documentación
+1.  **Mejoras de Experiencia de Usuario (UX):** Se configuró la tecla `Enter` para que sirva como atajo al iniciar sesión, y se revisó la ortografía en todos los componentes de la interfaz.
+2.  **Exportación a Excel:** Se ajustó la función de reportes para que el archivo generado consolide toda la información y se guarde directamente en la carpeta `bases_de_datos` con el nombre `Reporte_General_Residentes.xlsx`.
+3.  **Manual de Usuario y Mantenimiento:** Se reescribió el archivo `Leeme.md` para documentar la aplicación de forma clara, y se agregó el respectivo plan de mantenimiento en el mismo documento (exigido por los lineamientos del proyecto).
