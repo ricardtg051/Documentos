@@ -65,8 +65,10 @@ Si necesitas imprimirle el expediente a alguien:
 Si necesitas pasarle el reporte a logística o algo, ve al menú principal y dale a **"📂 Exportar a Excel"**. Se va a crear un archivo que se llama `Base_Datos.xlsx` con todo lo que hay guardado en la base de datos hasta ese momento.
 
 ### 💾 5. Hacer Respaldo (Backup) y Restaurarlo
-Si tienes el rol de "Administrador", verás un botón morado que dice **"💾 Crear Respaldo (Backup)"**. Úsalo cada cierto tiempo para guardar una copia exacta y segura de toda la base de datos en tu pendrive o disco duro. Solo dale clic y elige dónde quieres guardarlo.
-* **¿Cómo restaurarlo o usarlo en otra PC?** Muy fácil. Tomas el archivo `.db` que acabas de guardar en tu pendrive, lo llevas a la otra computadora, y lo renombras a `database_final.db`. Luego, simplemente reemplazas (pegas y sobrescribes) ese archivo en la misma carpeta donde tienes a `main.py`. Cuando abras el programa de nuevo, ¡listo! ya tendrás ahí todos los datos.
+Si tienes el rol de "Administrador", verás un botón morado que dice **"💾 Crear Respaldo (Backup)"**. Úsalo cada cierto tiempo para guardar una copia exacta y segura de toda la base de datos en tu pendrive o disco duro. Solo dale clic y elige dónde quieres guardarlo (se guarda con un nombre y fecha automáticos).
+* **¿Cómo restaurarlo o usarlo en otra PC?** Muy fácil. Tomas el archivo `.db` que acabas de guardar en tu pendrive y lo llevas a la otra computadora.
+  **Importante:** Debes renombrar ese archivo de respaldo exactamente a **`database_final.db`**.
+  Luego, simplemente reemplazas (pegas y sobrescribes) ese archivo en la carpeta `bases_de_datos` del nuevo proyecto. Cuando abras el programa de nuevo, ¡listo! ya tendrás ahí todos los datos.
 
 ### 💡 Unos atajos extra
 - Si estabas viendo los datos de alguien y quieres vaciar la pantalla para agregar a alguien más de cero, dale al botón gris **"🧹 LIMPIAR TODO"**.
