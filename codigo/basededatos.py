@@ -1,7 +1,9 @@
 import sqlite3
 import os
 
-DB_PATH = os.path.join("bases_de_datos", "database_final.db")
+directorio_actual = os.path.dirname(os.path.abspath(__file__))
+
+DB_PATH = os.path.join(directorio_actual, "..", "bases_de_datos", "database_final.db")
 
 def ejecutar_consulta(query, parametros=(), fetch=False, fetchall=False):
     """Función auxiliar para manejar la conexión a la base de datos."""
