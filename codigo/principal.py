@@ -60,6 +60,19 @@ class AppFinalPro(ctk.CTk):
         if texto_nuevo == "" or texto_nuevo == "DD/MM/AAAA": return True
         return all(char.isdigit() or char in "/-" for char in texto_nuevo)
 
+    def auto_formatear_fecha(self, event, widget_entry):
+        if event.keysym in ("BackSpace", "Delete", "Left", "Right"): return
+        texto = widget_entry.get()
+        numeros = "".join(filter(str.isdigit, texto))
+        if len(numeros) > 8: numeros = numeros[:8]
+        res = ""
+        for i, n in enumerate(numeros):
+            if i in (2, 4): res += "/"
+            res += n
+        if widget_entry.get() != res:
+            widget_entry.delete(0, 'end')
+            widget_entry.insert(0, res)
+
     def set_background(self, nombre_imagen):
         import os
         ruta_imagen = os.path.join("imagenes", nombre_imagen)
@@ -103,7 +116,10 @@ class AppFinalPro(ctk.CTk):
         
         if val_type == "letras": entry.configure(validate="key", validatecommand=self.vcmd_letra)
         elif val_type == "numeros": entry.configure(validate="key", validatecommand=self.vcmd_num)
-        elif val_type == "fecha": entry.configure(validate="key", validatecommand=self.vcmd_fecha)
+        elif val_type == "fecha": 
+            entry.configure(validate="key", validatecommand=self.vcmd_fecha)
+            entry.bind("<KeyRelease>", lambda e, w=entry: self.auto_formatear_fecha(e, w))
+            
         self.inputs[key] = entry
         entry.pack(fill="x", padx=20, pady=(0, 10))
 

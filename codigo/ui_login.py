@@ -36,10 +36,14 @@ class UILogin:
         self.entry_user.pack(pady=15)
         self.entry_pass = ctk.CTkEntry(frame_login, placeholder_text="Contraseña", show="*", width=250, height=40)
         self.entry_pass.pack(pady=15)
+        
+        self.entry_user.bind("<Return>", self.validar_login_ui)
+        self.entry_pass.bind("<Return>", self.validar_login_ui)
+        
         # La validación ocurrirá directamente en principal pero aquí pasamos la ref
         ctk.CTkButton(frame_login, text="INGRESAR", width=250, height=45, command=self.validar_login_ui).pack(pady=30)
 
-    def validar_login_ui(self):
+    def validar_login_ui(self, event=None):
         user = self.entry_user.get()
         pwd = self.entry_pass.get()
         

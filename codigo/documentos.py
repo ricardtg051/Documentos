@@ -7,29 +7,20 @@ from datetime import datetime # Added this import as it's used later
 def exportar_excel_db():
     """Conecta a la BD, lee los usuarios y exporta a Excel."""
     import sqlite3
+    import pandas as pd
+    import os
     from basededatos import DB_PATH
+    
     conn = sqlite3.connect(DB_PATH)
-    # The original code for exportar_excel_db is being replaced by the new logic.
-    # The new logic provided in the instruction seems to be incomplete or mixed with another function.
-    # I will assume the user wants to replace the pandas-based export with a manual iteration
-    # and that `listado_resultados` should come from the database query.
-    # However, the provided snippet for `exportar_excel_db` is not a complete function for exporting to Excel.
-    # It seems to be preparing data for a document, not an Excel file.
-    # Given the instruction "Modifica código/documentos.py para usar basededatos en lugar de codigo.basededatos."
-    # and the provided "Code Edit" block, I will apply the changes as literally as possible,
-    # even if it results in a syntactically or logically incomplete function.
-
-    # Original: df = pd.read_sql_query("SELECT * FROM usuarios", conn)
-    # Original: conn.close()
-    # Original: nombre_archivo = "Base_Datos.xlsx"
-    # Original: df.to_excel(nombre_archivo, index=False)
-    # Original: os.startfile(nombre_archivo)
-
-    # The instruction's code edit for exportar_excel_db starts here:
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM usuarios") # Assuming 'usuarios' table
-    listado_resultados = cursor.fetchall() # Fetch all results
-    conn.close() # Close connection after fetching results
+    df = pd.read_sql_query("SELECT * FROM usuarios", conn)
+    conn.close()
+    
+    # Nombre y ruta más acertados
+    nombre_archivo = os.path.join("bases_de_datos", "Reporte_General_Residentes.xlsx")
+    
+    # Exportar y abrir
+    df.to_excel(nombre_archivo, index=False)
+    os.startfile(nombre_archivo)
 
     # The following loop and dictionary creation seems to be preparing data for a document,
     # not directly for an Excel export as the function name suggests.
