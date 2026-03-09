@@ -29,14 +29,14 @@ El proyecto está organizado en la siguiente estructura de carpetas:
 
 ## 🚀 ¿Cómo se usa?
 
-1. Fíjate que en la misma carpeta del proyecto tengas todos los archivos juntos:
-   - Los scripts `main.py`, `database.py` y `documentos.py`.
-   - La base de datos `database_final.db` (¡no la borres o pierdes los datos!).
+1. Fíjate que en la misma carpeta del proyecto tengas todos los archivos juntos en sus debidas carpetas (`codigo`, `bases_de_datos`, etc).
+   - Los scripts `principal.py`, `basededatos.py` y `documentos.py` (dentro de `codigo`).
+   - La base de datos `database_final.db` (dentro de `bases_de_datos`).
    - El archivo `plantilla.docx` (se usa para generar los expedientes).
-   - Las imágenes de fondo (`fondo_app.jpg`, `fondo_carga.jpg`, `fondo_login.jpg`).
+   - Las imágenes de fondo (`fondo_app.jpg`, `fondo_carga.jpg`, `fondo_login.jpg` dentro de `imagenes`).
 2. Abre tu terminal ahí, y arranca el programa con:
    ```bash
-   python main.py
+   python codigo/principal.py
    ```
 3. Cuando te pida usuario y contraseña, ingresa con **admin** en ambos (usuario: `admin`, clave: `admin`).
 
@@ -71,3 +71,18 @@ Si tienes el rol de "Administrador", verás un botón morado que dice **"💾 Cr
 ### 💡 Unos atajos extra
 - Si estabas viendo los datos de alguien y quieres vaciar la pantalla para agregar a alguien más de cero, dale al botón gris **"🧹 LIMPIAR TODO"**.
 - Si se te olvida algo de esto, dentro del formulario hay un botón amarillo de **"❓ AYUDA"**. Dale ahí y te sale un resumen rápido.
+
+---
+
+## 🛠️ Plan de Mantenimiento del Sistema
+
+Para garantizar el funcionamiento óptimo del "Sistema de Registro Médico" a largo plazo, se recomienda seguir el siguiente plan de mantenimiento de forma periódica:
+
+1. **Mantenimiento Preventivo (Semanal):**
+   *   **Creación de Backups:** Utilizar la función de "Crear Respaldo (Backup)" desde una cuenta de Administrador al menos una vez por semana o tras registrar un volumen significativo de nuevos datos.
+   *   **Almacenamiento Seguro:** Guardar estas copias de resguardo (`.db`) en un dispositivo externo (pendrive, disco duro extraíble) o en un servicio de almacenamiento en la nube (Google Drive, OneDrive) y no en la misma computadora donde opera el sistema.
+
+2. **Mantenimiento Correctivo (Mensual / bimensual):**
+   *   **Revisión de Integridad:** Verificar que los reportes generados en Word (Expedientes) y Excel (Base de datos completa) se abren y leen correctamente, confirmando que la plantilla `plantilla.docx` no haya sido alterada.
+   *   **Limpieza de Directorio:** Procurar que dentro de la carpeta `bases_de_datos` solo se encuentren el archivo principal `database_final.db` y los últimos backups necesarios.
+   *   **Actualización de Dependencias:** Revisar periódicamente si las librerías base (ej. *customtkinter*, *pandas*) cuentan con actualizaciones de seguridad. Se pueden actualizar mediante `pip install --upgrade [nombre_librería]`.
