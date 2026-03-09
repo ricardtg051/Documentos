@@ -9,6 +9,10 @@ from PIL import Image
 import basededatos as db
 import documentos as docs
 
+from ui_login import UILogin
+from ui_menu import UIMenuPrincipal
+from ui_formulario import UIFormularioPrincipal
+
 ctk.set_appearance_mode("light")
 ctk.set_default_color_theme("blue")
 
@@ -32,6 +36,10 @@ class AppFinalPro(ctk.CTk):
         self.vcmd_fecha = (self.register(self.validar_fecha), '%P')
         
         self.protocol("WM_DELETE_WINDOW", self.confirmar_salida)
+        
+        self.login_ui = UILogin(self)
+        self.menu_ui = UIMenuPrincipal(self)
+        self.form_ui = UIFormularioPrincipal(self)
         
         # Inicialización de Base de Datos a través del módulo
         db.crear_db()
@@ -72,162 +80,17 @@ class AppFinalPro(ctk.CTk):
         for widget in self.winfo_children():
             widget.destroy()
 
-    # --- Pantallas ---
     def mostrar_pantalla_carga(self):
-        self.limpiar_ventana()
-        self.set_background("fondo_carga.jpg")
-        frame_carga = ctk.CTkFrame(self, fg_color="#ffffff", corner_radius=20)
-        frame_carga.place(relx=0.5, rely=0.5, anchor="center")
-        ctk.CTkLabel(frame_carga, text="Cargando Módulos...", font=("Segoe UI", 24, "bold")).pack(pady=20, padx=40)
-        self.progress = ctk.CTkProgressBar(frame_carga, width=400)
-        self.progress.pack(pady=10, padx=20)
-        self.progress.set(0)
-        threading.Thread(target=self.simular_carga).start()
-
-    def simular_carga(self):
-        for i in range(101):
-            time.sleep(0.01) 
-            self.progress.set(i / 100)
-            self.update_idletasks()
-        self.after(500, self.mostrar_login)
+        self.login_ui.mostrar_pantalla_carga()
 
     def mostrar_login(self):
-        self.limpiar_ventana()
-        self.set_background("fondo_login.jpg")
-        frame_login = ctk.CTkFrame(self, corner_radius=20, width=400, height=450, fg_color="white")
-        frame_login.place(relx=0.5, rely=0.5, anchor="center")
-        ctk.CTkLabel(frame_login, text="Acceso al Sistema", font=("Segoe UI", 26, "bold"), text_color="#3b8ed0").pack(pady=(40, 10))
-        self.entry_user = ctk.CTkEntry(frame_login, placeholder_text="Usuario", width=250, height=40)
-        self.entry_user.pack(pady=15)
-        self.entry_pass = ctk.CTkEntry(frame_login, placeholder_text="Contraseña", show="*", width=250, height=40)
-        self.entry_pass.pack(pady=15)
-        ctk.CTkButton(frame_login, text="INGRESAR", width=250, height=45, command=self.validar_login_ui).pack(pady=30)
-
-    def validar_login_ui(self):
-        user = self.entry_user.get()
-        pwd = self.entry_pass.get()
-        
-        resultado = db.validar_login(user, pwd)
-        
-        if resultado:
-            self.usuario_actual = user
-            self.rol_actual = resultado[0]
-            self.mostrar_menu_bienvenida()
-        else:
-            messagebox.showerror("Error", "Usuario o Contraseña incorrectos")
+        self.login_ui.mostrar_login()
 
     def mostrar_menu_bienvenida(self):
-        self.limpiar_ventana()
-        self.set_background("fondo_app.jpg")
-        f_head = ctk.CTkFrame(self, height=50, corner_radius=0)
-        f_head.pack(fill="x")
-        ctk.CTkLabel(f_head, text=f"👤 {self.usuario_actual} | {self.rol_actual}", padx=20).pack(side="left")
-        ctk.CTkButton(f_head, text="Cerrar Sesión", fg_color="#c0392b", width=100, command=self.mostrar_login).pack(side="right", padx=10, pady=5)
-        
-        frame_menu = ctk.CTkFrame(self, fg_color=("white", "gray20"), corner_radius=15)
-        frame_menu.place(relx=0.5, rely=0.5, anchor="center")
-        ctk.CTkLabel(frame_menu, text="MENU PRINCIPAL", font=("Segoe UI", 22, "bold")).pack(pady=30, padx=50)
-        ctk.CTkButton(frame_menu, text="📝 Nuevo Registro", width=300, height=45, command=lambda: self.cargar_interfaz_principal(modo="nuevo")).pack(pady=10)
-        ctk.CTkButton(frame_menu, text="🔍 Buscar y Gestionar", width=300, height=45, command=lambda: self.cargar_interfaz_principal(modo="buscar")).pack(pady=10)
-        ctk.CTkButton(frame_menu, text="📂 Exportar a Excel", width=300, height=45, fg_color="#27ae60", command=self.exportar_excel_ui).pack(pady=10)
-        
-        # Opcion agregada solo para administrador: Respaldos
-        if self.rol_actual == "Administrador":
-            ctk.CTkButton(frame_menu, text="💾 Crear Respaldo (Backup)", width=300, height=45, fg_color="#8e44ad", command=self.respaldar_bd_ui).pack(pady=10)
+        self.menu_ui.mostrar_menu_bienvenida()
 
     def cargar_interfaz_principal(self, modo="nuevo"):
-        self.modo_actual = modo 
-        self.limpiar_ventana()
-        self.set_background("fondo_win.jpg")
-        
-        f_header = ctk.CTkFrame(self, fg_color="transparent")
-        f_header.pack(fill="x", padx=20, pady=5)
-        ctk.CTkButton(f_header, text="⬅ Volver", fg_color="#7f8c8d", width=80, command=self.mostrar_menu_bienvenida).pack(side="left")
-        
-        texto_modo = "📝 MODO: NUEVO REGISTRO" if modo == "nuevo" else "🔍 MODO: EDICIÓN Y GESTIÓN"
-        color_modo = "#27ae60" if modo == "nuevo" else "#2980b9"
-        
-        self.lbl_modo = ctk.CTkLabel(f_header, text=texto_modo, font=("Segoe UI", 16, "bold"), text_color=color_modo)
-        self.lbl_modo.pack(side="left", padx=20)
-        ctk.CTkButton(f_header, text="❓ AYUDA", fg_color="#f39c12", text_color="white", width=100, font=("bold", 12), command=self.mostrar_ayuda).pack(side="right", padx=10)
-        
-        if modo == "buscar":
-            f_busq = ctk.CTkFrame(self, fg_color="white", corner_radius=10)
-            f_busq.pack(fill="x", padx=20, pady=5)
-            ctk.CTkLabel(f_busq, text="Búsqueda:", font=("bold", 12)).pack(side="left", padx=(15, 5))
-            self.entry_buscar = ctk.CTkEntry(f_busq, placeholder_text="Escriba nombre o cédula...", height=35)
-            self.entry_buscar.pack(side="left", padx=5, pady=10, expand=True, fill="x")
-            self.entry_buscar.bind("<KeyRelease>", self.actualizar_busqueda_dinamica)
-            
-            ctk.CTkButton(f_busq, text="🔍 BUSCAR", width=100, height=35, command=lambda: self.cargar_usuario_desde_busqueda(self.entry_buscar.get())).pack(side="left", padx=10)
-            
-            if self.rol_actual == "Administrador":
-                ctk.CTkButton(f_busq, text="ELIMINAR", width=100, height=35, fg_color="#e74c3c", command=self.eliminar_registro_ui).pack(side="right", padx=15)
-        else:
-            self.entry_buscar = None
-
-        self.lista_resultados = ctk.CTkScrollableFrame(self, height=150, width=500, fg_color="#f8f9f9", corner_radius=5, border_width=1)
-        self.scroll = ctk.CTkScrollableFrame(self, fg_color="transparent")
-        self.scroll.pack(expand=True, fill="both", padx=10, pady=5)
-        self.inputs, self.combos = {}, {}
-        
-        f_cols = ctk.CTkFrame(self.scroll, fg_color="transparent")
-        f_cols.pack(fill="x", expand=True)
-
-        # SECCIÓN IZQUIERDA
-        f_izq = ctk.CTkFrame(f_cols, corner_radius=15, fg_color="white")
-        f_izq.pack(side="left", expand=True, fill="both", padx=5, pady=5)
-        ctk.CTkLabel(f_izq, text="DATOS PERSONALES", font=("bold", 14), text_color="#2980b9").pack(pady=10)
-        self.crear_input(f_izq, "Nombre Completo", "nombre", placeholder="Ej: Leonardo David Moreno Bruce", val_type="letras")
-        row1 = ctk.CTkFrame(f_izq, fg_color="transparent")
-        row1.pack(fill="x", padx=15)
-        self.crear_input(row1, "Cédula", "cedula", pack_side="left", placeholder="Solo números", val_type="numeros")
-        self.crear_input(row1, "Fecha Nacimiento", "fnac", pack_side="right", placeholder="DD/MM/AAAA", val_type="fecha")
-        self.crear_input(f_izq, "Correo Electrónico", "correo", placeholder="correo@ejemplo.com")
-        self.crear_input(f_izq, "Teléfono", "telf", placeholder="04120000000", val_type="numeros")
-        self.crear_input(f_izq, "Dirección", "dir", placeholder="Calle, Sector, Ciudad")
-        ctk.CTkLabel(f_izq, text="Observaciones", font=("Segoe UI", 11, "bold")).pack(anchor="w", padx=20, pady=(5,0))
-        self.txt_obs = ctk.CTkTextbox(f_izq, height=100, border_width=1, border_color="#abb2b9")
-        self.txt_obs.pack(fill="x", padx=20, pady=(0, 20))
-
-        # SECCIÓN DERECHA
-        f_der = ctk.CTkFrame(f_cols, corner_radius=15, fg_color="white")
-        f_der.pack(side="left", expand=True, fill="both", padx=5, pady=5)
-        self.crear_seccion_institucional(f_der)
-
-        self.cargar_datos_combos_inicial()
-
-        f_btns = ctk.CTkFrame(self, fg_color="transparent")
-        f_btns.pack(fill="x", padx=20, pady=10)
-        
-        color_boton = "#27ae60" if self.modo_actual == "nuevo" else "#2980b9"
-        texto_boton = "💾 GUARDAR" if self.modo_actual == "nuevo" else "💾 ACTUALIZAR CAMBIOS"
-
-        self.btn_guardar = ctk.CTkButton(f_btns, text=texto_boton, fg_color=color_boton, 
-                                         hover_color="#1e8449" if self.modo_actual == "nuevo" else "#1a5276",
-                                         height=45, command=self.guardar_ui)
-        self.btn_guardar.pack(side="left", expand=True, fill="x", padx=5)
-        
-        ctk.CTkButton(f_btns, text="📄 WORD", fg_color="#e67e22", height=45, command=self.generar_word_ui).pack(side="left", expand=True, fill="x", padx=5)
-        ctk.CTkButton(f_btns, text="🧹 LIMPIAR TODO", fg_color="#95a5a6", height=45, command=self.limpiar_formulario).pack(side="left", expand=True, fill="x", padx=5)
-
-    def crear_seccion_institucional(self, f_der):
-        ctk.CTkLabel(f_der, text="DATOS INSTITUCIONALES", font=("bold", 14), text_color="#2980b9").pack(pady=10)
-        self.crear_combo(f_der, "Universidad", "uni", command=self.cargar_especialidades_por_uni)
-        self.crear_combo(f_der, "Especialidad", "esp")
-        self.crear_combo(f_der, "Centro de Salud", "cen", command=self.actualizar_responsable_en_pantalla)
-        
-        self.lbl_responsable = ctk.CTkLabel(f_der, text="Responsable: (Seleccione un centro)", font=("Segoe UI", 10, "italic"), text_color="#3498db")
-        self.lbl_responsable.pack(anchor="w", padx=25, pady=(0, 10))
-
-        self.crear_combo(f_der, "Guardias Asignadas", "guardias")
-        self.crear_combo(f_der, "Cargo", "car")
-        self.crear_combo(f_der, "Modalidad", "mod")
-        
-        row2 = ctk.CTkFrame(f_der, fg_color="transparent")
-        row2.pack(fill="x", padx=15, pady=5)
-        self.crear_input(row2, "Fecha Inicio", "ini", pack_side="left", placeholder="DD/MM/AAAA", val_type="fecha")
-        self.crear_input(row2, "Fecha Fin", "fin", pack_side="right", placeholder="DD/MM/AAAA", val_type="fecha")
+        self.form_ui.cargar_interfaz_principal(modo)
 
     # --- Lógica de Interacción ---
     def crear_input(self, master, label, key, pack_side=None, placeholder="", val_type=None):
