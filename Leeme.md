@@ -4,11 +4,22 @@ Este proyecto es la entrega final de programación en Python. Es una aplicación
 
 ## ⚙️ ¿Qué necesitas para ejecutarlo?
 
-Asegúrate de tener Python (versión 3.x) instalado en tu computadora. Luego, debes instalar los paquetes adicionales que usa el código. Abre tu terminal o línea de comandos y ejecuta:
+Asegúrate de tener Python (versión 3.x) instalado en tu computadora. Luego sigue estos pasos para instalar los paquetes necesarios:
+
+### Paso 1 — Abrir la terminal
+
+- En **Windows**: Presiona `Win + R`, escribe `cmd` y presiona Enter. También puedes buscar **"Símbolo del sistema"** o **"PowerShell"** en el menú Inicio.
+- Otra opción: dentro de la carpeta del proyecto, haz clic en la barra de direcciones del Explorador de archivos, escribe `cmd` y presiona Enter. Esto abrirá la terminal ya posicionada en la carpeta correcta.
+
+### Paso 2 — Instalar los paquetes
+
+Con la terminal abierta, escribe el siguiente comando y presiona Enter:
 
 ```bash
 pip install customtkinter pandas docxtpl openpyxl Pillow
 ```
+
+Espera a que termine la descarga e instalación de todos los paquetes. Verás mensajes de progreso y al final aparecerá `Successfully installed ...`.
 
 ## Estructura del Proyecto
 
@@ -30,11 +41,13 @@ Organizamos el proyecto en varias carpetas para estructurarlo mejor:
 ## 🚀 ¿Cómo se usa?
 
 1. Verifica que en tu carpeta del proyecto tengas todo esto guardado manteniendo la estructura original.
-2. Abre tu terminal de comandos e ingresa:
+2. Abre la terminal posicionada dentro de la carpeta raíz del proyecto (la carpeta que contiene `codigo/`, `bases_de_datos/`, etc.). Si no lo hiciste en el Paso 1 anterior, puedes hacerlo desde el Explorador de archivos: haz clic en la barra de direcciones, escribe `cmd` y presiona Enter.
+3. Ejecuta el programa con este comando:
    ```bash
    python codigo/principal.py
    ```
-3. Las credenciales de acceso por defecto asignadas al Administrador son: usuario **admin**, clave **admin**.
+   En pocos segundos se abrirá la ventana de la aplicación.
+4. Las credenciales de acceso por defecto asignadas al Administrador son: usuario **admin**, clave **admin**.
 
 ---
 
