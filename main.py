@@ -125,9 +125,13 @@ class AppFinalPro(ctk.CTk):
         frame_menu = ctk.CTkFrame(self, fg_color=("white", "gray20"), corner_radius=15)
         frame_menu.place(relx=0.5, rely=0.5, anchor="center")
         ctk.CTkLabel(frame_menu, text="MENU PRINCIPAL", font=("Segoe UI", 22, "bold")).pack(pady=30, padx=50)
-        ctk.CTkButton(frame_menu, text="📝 Nuevo Registro", width=300, height=55, command=lambda: self.cargar_interfaz_principal(modo="nuevo")).pack(pady=10)
-        ctk.CTkButton(frame_menu, text="🔍 Buscar y Gestionar", width=300, height=55, command=lambda: self.cargar_interfaz_principal(modo="buscar")).pack(pady=10)
-        ctk.CTkButton(frame_menu, text="📂 Exportar a Excel", width=300, height=55, fg_color="#27ae60", command=self.exportar_excel_ui).pack(pady=10)
+        ctk.CTkButton(frame_menu, text="📝 Nuevo Registro", width=300, height=45, command=lambda: self.cargar_interfaz_principal(modo="nuevo")).pack(pady=10)
+        ctk.CTkButton(frame_menu, text="🔍 Buscar y Gestionar", width=300, height=45, command=lambda: self.cargar_interfaz_principal(modo="buscar")).pack(pady=10)
+        ctk.CTkButton(frame_menu, text="📂 Exportar a Excel", width=300, height=45, fg_color="#27ae60", command=self.exportar_excel_ui).pack(pady=10)
+        
+        # Opcion agregada solo para administrador: Respaldos
+        if self.rol_actual == "Administrador":
+            ctk.CTkButton(frame_menu, text="💾 Crear Respaldo (Backup)", width=300, height=45, fg_color="#8e44ad", command=self.respaldar_bd_ui).pack(pady=10)
 
     def cargar_interfaz_principal(self, modo="nuevo"):
         self.modo_actual = modo 
@@ -435,6 +439,29 @@ class AppFinalPro(ctk.CTk):
         caja_texto = ctk.CTkTextbox(ventana_ayuda, width=500, height=250, border_width=1, border_color="#abb2b9")
         caja_texto.pack(pady=10, padx=20)
         caja_texto.insert("1.0", msj_actual)
+
+    def respaldar_bd_ui(self):
+        import time
+        from tkinter import filedialog
+        
+        # Generar nombre por defecto con fecha
+        fecha_str = time.strftime("%d_%m_%Y_%H%M")
+        nombre_default = f"Respaldo_BD_{fecha_str}.db"
+        
+        # Abrir ventana para que el usuario escoja donde guardar
+        ruta = filedialog.asksaveasfilename(
+            defaultextension=".db",
+            initialfile=nombre_default,
+            title="Guardar Respaldo de Base de Datos",
+            filetypes=[("Archivos de Base de Datos", "*.db"), ("Todos los archivos", "*.*")]
+        )
+        
+        if ruta:
+            exito = db.hacer_respaldo_bd(ruta)
+            if exito:
+                messagebox.showinfo("Respaldo Exitoso", f"La base de datos completa se ha guardado correctamente como una copia de seguridad en:\n{ruta}")
+            else:
+                messagebox.showerror("Error", "No se encontró el archivo original de la base de datos para copiar.")
 
     def eliminar_registro_ui(self):
         ced = self.inputs["cedula"].get()

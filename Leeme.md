@@ -47,6 +47,9 @@ Si necesitas imprimirle el expediente a alguien:
 ### 📂 4. Exportar toodos los datos del sistema
 Si necesitas pasarle el reporte a logística o algo, ve al menú principal y dale a **"📂 Exportar a Excel"**. Se va a crear un archivo que se llama `Base_Datos.xlsx` con todo lo que hay guardado en la base de datos hasta ese momento.
 
+### 💾 5. Hacer Respaldo (Backup)
+Si tienes el rol de "Administrador", verás un botón morado que dice **"💾 Crear Respaldo (Backup)"**. Úsalo cada cierto tiempo para guardar una copia exacta y segura de toda la base de datos en tu pendrive o disco duro. Solo dale clic y elige dónde quieres guardarlo.
+
 ### 💡 Unos atajos extra
 - Si estabas viendo los datos de alguien y quieres vaciar la pantalla para agregar a alguien más de cero, dale al botón gris **"🧹 LIMPIAR TODO"**.
 - Si se te olvida algo de esto, dentro del formulario hay un botón amarillo de **"❓ AYUDA"**. Dale ahí y te sale un resumen rápido.

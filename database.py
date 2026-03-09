@@ -16,17 +16,17 @@ def ejecutar_consulta(query, parametros=(), fetch=False, fetchall=False):
 
 def crear_db():
     queries = [
-        "CREATE TABLE IF NOT EXISTS login_users (usuario TEXT PRIMARY KEY, password TEXT, rol TEXT)",
+        "CREATE TABLE IF NOT EXISTS login_users (id INTEGER PRIMARY KEY AUTOINCREMENT, usuario TEXT UNIQUE, password TEXT, rol TEXT)",
         """CREATE TABLE IF NOT EXISTS usuarios 
-           (cedula TEXT PRIMARY KEY, nombre TEXT, telf TEXT, correo TEXT, fnac TEXT, dir TEXT, guardias TEXT,
+           (id INTEGER PRIMARY KEY AUTOINCREMENT, cedula TEXT UNIQUE, nombre TEXT, telf TEXT, correo TEXT, fnac TEXT, dir TEXT, guardias TEXT,
            uni TEXT, esp TEXT, car TEXT, mod TEXT, cen TEXT, ini TEXT, fin TEXT, observaciones TEXT)""",
-        "CREATE TABLE IF NOT EXISTS centros (nombre TEXT UNIQUE, responsable TEXT)",
-        "CREATE TABLE IF NOT EXISTS oferta_academica (universidad TEXT, especialidad TEXT, UNIQUE(universidad, especialidad))",
-        "CREATE TABLE IF NOT EXISTS guardias_centro (centro TEXT, guardia TEXT, UNIQUE(centro, guardia))",
-        "CREATE TABLE IF NOT EXISTS universidades (nombre TEXT UNIQUE)",
-        "CREATE TABLE IF NOT EXISTS cargos (nombre TEXT UNIQUE)",
-        "CREATE TABLE IF NOT EXISTS modalidades (nombre TEXT UNIQUE)",
-        "CREATE TABLE IF NOT EXISTS configuracion (clave TEXT PRIMARY KEY, valor TEXT)"
+        "CREATE TABLE IF NOT EXISTS centros (id INTEGER PRIMARY KEY AUTOINCREMENT, nombre TEXT UNIQUE, responsable TEXT)",
+        "CREATE TABLE IF NOT EXISTS oferta_academica (id INTEGER PRIMARY KEY AUTOINCREMENT, universidad TEXT, especialidad TEXT, UNIQUE(universidad, especialidad))",
+        "CREATE TABLE IF NOT EXISTS guardias_centro (id INTEGER PRIMARY KEY AUTOINCREMENT, centro TEXT, guardia TEXT, UNIQUE(centro, guardia))",
+        "CREATE TABLE IF NOT EXISTS universidades (id INTEGER PRIMARY KEY AUTOINCREMENT, nombre TEXT UNIQUE)",
+        "CREATE TABLE IF NOT EXISTS cargos (id INTEGER PRIMARY KEY AUTOINCREMENT, nombre TEXT UNIQUE)",
+        "CREATE TABLE IF NOT EXISTS modalidades (id INTEGER PRIMARY KEY AUTOINCREMENT, nombre TEXT UNIQUE)",
+        "CREATE TABLE IF NOT EXISTS configuracion (id INTEGER PRIMARY KEY AUTOINCREMENT, clave TEXT UNIQUE, valor TEXT)"
     ]
     for q in queries:
         ejecutar_consulta(q)
@@ -38,7 +38,7 @@ def crear_db():
         pass
 
 def inicializar_datos_semilla():
-    ejecutar_consulta("INSERT OR IGNORE INTO login_users VALUES ('admin', 'admin', 'Administrador')")
+    ejecutar_consulta("INSERT OR IGNORE INTO login_users (usuario, password, rol) VALUES ('admin', 'admin', 'Administrador')")
     msj_defecto = ("🆘 SOPORTE DEL SISTEMA\n\n"
                    "1. BÚSQUEDA: Escriba y use la lista desplegable o el botón 🔍.\n"
                    "2. GUARDAR: Presione el botón verde. Los datos se mantienen para generar el Word.\n"
@@ -58,7 +58,8 @@ def buscar_usuarios_dinamico(texto):
                              (f'%{texto}%', f'%{texto}%'), fetch=True, fetchall=True)
 
 def obtener_usuario(parametro):
-    return ejecutar_consulta("SELECT * FROM usuarios WHERE cedula = ? OR nombre = ?", (parametro, parametro), fetch=True)
+    # Ya que ahora usamos un ID autonumerico para la primary key, traemos todo pero filtramos 
+    return ejecutar_consulta("SELECT cedula, nombre, telf, correo, fnac, dir, guardias, uni, esp, car, mod, cen, ini, fin, observaciones FROM usuarios WHERE cedula = ? OR nombre = ?", (parametro, parametro), fetch=True)
 
 def verificar_cedula(cedula):
     res = ejecutar_consulta("SELECT nombre FROM usuarios WHERE cedula = ?", (cedula,), fetch=True)
@@ -94,3 +95,12 @@ def actualizar_usuario(d, c, obs):
 
 def eliminar_usuario(cedula):
     ejecutar_consulta("DELETE FROM usuarios WHERE cedula=?", (cedula,))
+
+def hacer_respaldo_bd(ruta_destino):
+    import shutil
+    import os
+    if os.path.exists(DB_PATH):
+        # Aqui generamos la copia del archivo exacto de la base de datos
+        shutil.copy2(DB_PATH, ruta_destino)
+        return True
+    return False
