@@ -10,6 +10,23 @@ Asegúrate de tener Python 3 instalado. Luego, instala las librerías que usé e
 pip install customtkinter pandas docxtpl openpyxl Pillow
 ```
 
+## Estructura del Proyecto
+
+El proyecto está organizado en la siguiente estructura de carpetas:
+
+*   `codigo/`: Contiene todo el código fuente de la aplicación en Python.
+    *   `principal.py`: Archivo principal para iniciar la aplicación. Maneja el flujo general.
+    *   `basededatos.py`: Gestión e interacción con SQLite y creación de backups.
+    *   `documentos.py`: Generación de reportes (Word y Excel).
+    *   `ui_login.py`: Lógica e interfaz gráfica de la pantalla de inicio y carga.
+    *   `ui_menu.py`: Elementos y navegación del menú principal del sistema.
+    *   `ui_formulario.py`: Diseño y componentes visuales del formulario de registros.
+*   `bases_de_datos/`: Almacena el repositorio local.
+    *   `database_final.db`: La base de datos oficial.
+*   `imagenes/`: Recursos visuales utilizados en la interfaz (fondos jpg).
+*   `plantilla.docx`: Plantilla base requerida para la generación del Carnet / Constancia en Word.
+*   `Leeme.md`: Este manual de usuario.
+
 ## 🚀 ¿Cómo se usa?
 
 1. Fíjate que en la misma carpeta del proyecto tengas todos los archivos juntos:
