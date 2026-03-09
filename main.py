@@ -40,15 +40,16 @@ class AppFinalPro(ctk.CTk):
 
     # --- Validaciones y UI General ---
     def validar_letras(self, texto_nuevo):
-        if texto_nuevo == "": return True
+        # Ayudamos al sistema a no bloquear las propias instrucciones grises
+        if texto_nuevo == "" or texto_nuevo == "Ej: Leonardo David Moreno Bruce": return True
         return all(char.isalpha() or char.isspace() for char in texto_nuevo)
 
     def validar_numeros(self, texto_nuevo):
-        if texto_nuevo == "": return True
+        if texto_nuevo == "" or texto_nuevo == "Solo números" or texto_nuevo == "04120000000": return True
         return texto_nuevo.isdigit()
 
     def validar_fecha(self, texto_nuevo):
-        if texto_nuevo == "": return True
+        if texto_nuevo == "" or texto_nuevo == "DD/MM/AAAA": return True
         return all(char.isdigit() or char in "/-" for char in texto_nuevo)
 
     def set_background(self, nombre_imagen):
@@ -228,24 +229,17 @@ class AppFinalPro(ctk.CTk):
             f = ctk.CTkFrame(master, fg_color="transparent"); f.pack(side=pack_side, expand=True, fill="x", padx=2)
             master = f
         ctk.CTkLabel(master, text=label, font=("Segoe UI", 11, "bold")).pack(anchor="w", padx=20)
+        
         entry = ctk.CTkEntry(master, height=30, placeholder_text=placeholder)
+        
         if val_type == "letras": entry.configure(validate="key", validatecommand=self.vcmd_letra)
         elif val_type == "numeros": entry.configure(validate="key", validatecommand=self.vcmd_num)
         elif val_type == "fecha": entry.configure(validate="key", validatecommand=self.vcmd_fecha)
         self.inputs[key] = entry
         entry.pack(fill="x", padx=20, pady=(0, 10))
 
-        # CORRECCION: Parche para que el texto instruccional gris no desaparezca al borrar
-        if placeholder != "":
-            def reparar_texto_gris(event, e=entry, p=placeholder):
-                if e.get() == "":
-                    # Al intercambiar por vacío y ponerlo de nuevo forzamos a que aparezca 
-                    e.configure(placeholder_text="")
-                    e.configure(placeholder_text=p)
-            entry.bind("<KeyRelease>", reparar_texto_gris, add="+")
-
         if key == "cedula":
-            entry.bind("<FocusOut>", self.verificar_cedula_existente, add="+")
+            entry.bind("<FocusOut>", self.verificar_cedula_existente)
 
     def crear_combo(self, master, label, key, command=None):
         ctk.CTkLabel(master, text=label, font=("Segoe UI", 11, "bold")).pack(anchor="w", padx=20)
@@ -425,15 +419,6 @@ class AppFinalPro(ctk.CTk):
     def limpiar_formulario(self):
         for e in self.inputs.values(): 
             e.delete(0, 'end')
-            # Tratamos de restaurar las letras grises al usar el boton ocultando y mostrando el atributo
-            try:
-                p = e.cget("placeholder_text")
-                if p:
-                    e.configure(placeholder_text="")
-                    e.configure(placeholder_text=p)
-            except:
-                pass
-                
         for c in self.combos.values(): c.set("")
         self.txt_obs.delete("1.0", "end")
         self.lista_resultados.place_forget()
