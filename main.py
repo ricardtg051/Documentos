@@ -235,8 +235,17 @@ class AppFinalPro(ctk.CTk):
         self.inputs[key] = entry
         entry.pack(fill="x", padx=20, pady=(0, 10))
 
+        # CORRECCION: Parche para que el texto instruccional gris no desaparezca al borrar
+        if placeholder != "":
+            def reparar_texto_gris(event, e=entry, p=placeholder):
+                if e.get() == "":
+                    # Al intercambiar por vacío y ponerlo de nuevo forzamos a que aparezca 
+                    e.configure(placeholder_text="")
+                    e.configure(placeholder_text=p)
+            entry.bind("<KeyRelease>", reparar_texto_gris, add="+")
+
         if key == "cedula":
-            entry.bind("<FocusOut>", self.verificar_cedula_existente)
+            entry.bind("<FocusOut>", self.verificar_cedula_existente, add="+")
 
     def crear_combo(self, master, label, key, command=None):
         ctk.CTkLabel(master, text=label, font=("Segoe UI", 11, "bold")).pack(anchor="w", padx=20)
@@ -325,9 +334,30 @@ class AppFinalPro(ctk.CTk):
         c = {k: v.get() for k, v in self.combos.items()}
         obs = self.txt_obs.get("1.0", "end-1c").strip()
         
-        if not d["cedula"] or not d["nombre"]:
-            messagebox.showwarning("Atención", "Nombre y Cédula son obligatorios.")
-            return
+        # --- VALIDACIONES NUEVAS (No dejar vacio ni fechas malas) ---
+        # Validar que no existan campos de texto vacios
+        for clave, valor in d.items():
+            if valor == "":
+                messagebox.showwarning("Atención", "No puede dejar ningún campo en blanco. Llénelos todos por favor.")
+                return
+                
+        # Validar los campos de seleccion (combos)
+        for clave, valor in c.items():
+            if valor == "":
+                messagebox.showwarning("Atención", "Debe seleccionar una opción en todas las listas.")
+                return
+
+        # Validar que las fechas no den fallas usando time
+        fechas = [d["fnac"], d["ini"], d["fin"]]
+        for f in fechas:
+            try:
+                # Comprobamos que tenga el formato de fecha exacto
+                time.strptime(f, "%d/%m/%Y")
+            except ValueError:
+                messagebox.showerror("Fecha incorrecta", "La fecha ingresada tiene fallas. Por favor corríjala usando el formato: DD/MM/AAAA (Ejemplo: 25/08/2020)")
+                return
+
+        # --- Fin de validaciones nuevas ---
 
         if "@" not in d["correo"] or "." not in d["correo"]:
             self.inputs["correo"].configure(border_color="#e74c3c", border_width=2)
@@ -393,10 +423,21 @@ class AppFinalPro(ctk.CTk):
             messagebox.showerror("Error", f"No se pudo generar el Word: {e}")
 
     def limpiar_formulario(self):
-        for e in self.inputs.values(): e.delete(0, 'end')
+        for e in self.inputs.values(): 
+            e.delete(0, 'end')
+            # Tratamos de restaurar las letras grises al usar el boton ocultando y mostrando el atributo
+            try:
+                p = e.cget("placeholder_text")
+                if p:
+                    e.configure(placeholder_text="")
+                    e.configure(placeholder_text=p)
+            except:
+                pass
+                
         for c in self.combos.values(): c.set("")
         self.txt_obs.delete("1.0", "end")
         self.lista_resultados.place_forget()
+        self.focus() # Quitamos el foco seleccionando la ventana principal
 
     def mostrar_ayuda(self):
         msj_actual = db.obtener_mensaje_ayuda()
